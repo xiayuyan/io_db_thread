@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -258,7 +255,9 @@ public class FTPUtil {
                     resultMap.put("result", false);
                     return resultMap;
                 }
-                ftpClient.enterLocalPassiveMode();  // 设置被动模式，开通一个端口来传输数据
+
+                // 设置被动模式，开通一个端口来传输数据
+                ftpClient.enterLocalPassiveMode();
                 String[] fs = ftpClient.listNames();
                 // 判断该目录下是否有文件
                 if (fs == null || fs.length == 0) {
@@ -296,4 +295,52 @@ public class FTPUtil {
         resultMap.put("result", false);
         return resultMap;
     }
+
+    public  boolean upload( String ftpPath, InputStream inputStream, String saveName) {
+        boolean flag = false;
+        login(ftpAddress, ftpPort, ftpUsername, ftpPassword);
+        String path = changeEncoding(basePath + "/" + ftpPath);
+
+        try {
+            // 检查工作目录是否存在
+            if (ftpClient.changeWorkingDirectory(path)) {
+                // 检查是否上传成功
+                if (storeFile(ftpClient, saveName, inputStream)) {
+                    flag = true;
+                    closeConnect();
+                }
+            }
+        } catch (IOException e) {
+            logger.error("工作目录不存在");
+            e.printStackTrace();
+            closeConnect();
+        }
+
+        return flag;
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param ftpClient
+     * @param saveName        全路径。如/home/public/a.txt
+     * @param fileInputStream 要上传的文件流
+     * @return
+     */
+    public  boolean storeFile(FTPClient ftpClient, String saveName, InputStream fileInputStream) {
+        boolean flag = false;
+        try {
+            if (ftpClient.storeFile(saveName, fileInputStream)) {
+                flag = true;
+                logger.error("上传成功");
+                closeConnect();
+            }
+        } catch (IOException e) {
+            logger.error("上传失败");
+            closeConnect();
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
 }
