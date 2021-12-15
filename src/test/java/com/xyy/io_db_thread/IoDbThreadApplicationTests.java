@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Map;
 
 @SpringBootTest
@@ -21,6 +18,8 @@ class IoDbThreadApplicationTests {
 
     @Value("${ftp.local.save.basepath}")
     private String localSavePath;
+    @Value("${ftp.local.save.basefile}")
+    private String localSavefile;
 
     @Test
     void contextLoads() {
@@ -32,14 +31,14 @@ class IoDbThreadApplicationTests {
     }
 
     @Test
-    public void ftpUploadTest() throws FileNotFoundException {
+    public void ftpUploadTest() throws FileNotFoundException, UnsupportedEncodingException {
 
-//        String workingPath = "/home/lvhaibao/";
-        String str = localSavePath+"/"+"待办.txt";
+        String str = localSavePath+"/"+localSavefile;
         InputStream fileInputStream = new FileInputStream(new File(str));
-        String saveName = "待办.txt";
+
+        String saveName = localSavefile;
+        saveName = new String(saveName.getBytes("UTF-8"),"iso-8859-1");
         System.out.println(ftpUtil.upload("", fileInputStream, saveName));
 
     }
-
 }

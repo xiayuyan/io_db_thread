@@ -1,0 +1,19 @@
+#mysql
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+##我的数据库
+#    url: jdbc:mysql://1.15.118.39:3306/testmysql?useSSL=false
+#    username: testMysql
+#    password: 6mCd4h8Ek5wjpMHM
+
+ftp:
+  basepath: /chenke
+  host: 1.15.118.39
+  port: 21
+  username: cqcq
+  password: SSCsJtGehMdsCWkN
+  local:
+    save:
+      basepath: C:\Users\晨科信息\Downloads\a
+      basefile: 待办.txt

@@ -273,7 +273,7 @@ public class FTPUtil {
                     tableDirs.mkdirs();
                 }
                 for (String ff : fs) {
-                    String ftpName = new String(ff.getBytes(serverCharset), localCharset);
+                    String ftpName = new String(ff.getBytes(serverCharset), CHARSET_UTF8);
                     File file = new File(tableDirName + "/" + ftpName);
                     //存储文件名导入时使用
                     tableFileNameList.add(tableDirName + "/" + ftpName);
